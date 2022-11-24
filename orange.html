@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    <style>
+        *{
+            padding: 0px;
+            margin: 0px;
+            user-select: none;
+        }
+        html{
+            background-color: orange;
+        }
+        #object_item{
+            position: relative;
+            width: 100px;
+            height: 100px;
+            background-color: orangered;
+        }
+
+        #object_handle_l{
+            position: absolute;
+            width: 15px;
+            height: 70px;
+            top: 15px;
+            left: 0px;
+            cursor: e-resize;
+        }
+        #object_handle_r{
+            position: absolute;
+            width: 15px;
+            height: 70px;
+            top: 15px;
+            right: 0px;
+            cursor: e-resize;
+        }
+        #object_handle_t{
+            position: absolute;
+            width: 70px;
+            height: 15px;
+            top: 0px;
+            left: 15px;
+            cursor: n-resize;
+        }
+        #object_handle_b{
+            position: absolute;
+            width: 70px;
+            height: 15px;
+            bottom: 0px;
+            left: 15px;
+            cursor: n-resize;
+
+        }
+        
+
+        #object_handle_lt{
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 15px;
+            height: 15px;
+            cursor: nwse-resize;
+        }
+        #object_handle_lb{
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            width: 15px;
+            height: 15px;
+            cursor: nesw-resize;
+            
+        }
+        #object_handle_rt{
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            width: 15px;
+            height: 15px;
+            cursor: nesw-resize;
+            
+        }
+        #object_handle_rb{
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+            width: 15px;
+            height: 15px;
+            cursor: nwse-resize;
+
+        }
+        #object_handle_move{
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 70px;
+            height: 70px;
+            cursor: move;
+        }
+
+        #loader{
+            width: 100%;
+            height: 100vh;
+            background-color: #222;
+            z-index: 100;
+            position: absolute;
+            pointer-events: none;
+            transition: .6s;
+        }
+
+        #undo{
+            display: block;
+            cursor: pointer;
+            position: fixed;
+            width: 50px;
+            height: 50px;
+            top: 20px;
+            left: 20px;
+            color: #441200;
+            z-index: 50;
+            background-color: #ffffff00;
+        }
+        #undo span{
+            font-size: 50px;
+            user-select: none;
+            pointer-events: none;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div id="loader" style="opacity: 1;"></div>
+    <div id="undo"><span class="material-icons">arrow_back</span></div>
+
+    <div id="object_item">
+        <div id="object_handle_l"></div>
+        <div id="object_handle_r"></div>
+        <div id="object_handle_t"></div>
+        <div id="object_handle_b"></div>
+        <div id="object_handle_lt"></div>
+        <div id="object_handle_lb"></div>
+        <div id="object_handle_rt"></div>
+        <div id="object_handle_rb"></div>
+        <div id="object_handle_move"></div>
+    </div>
+    
+    <script>
+
+        const loader_div = document.getElementById('loader')
+            const undo = document.getElementById('undo')
+
+            let cooldown
+            let cooldown2
+            let cooldownnum = 30
+            let cooldownnum2 = 120
+
+            function cooldownani(){
+            if(cooldownnum>0){
+                cooldownnum--
+            }else{
+                loader_div.style.opacity=`0`
+            }
+            cooldown = requestAnimationFrame(cooldownani)
+            }
+            function cooldownani2(){
+            loader_div.style.opacity=`1`
+            if(cooldownnum2>0){
+                cooldownnum2--
+            }else{
+                window.location.href = './index.html'
+            }
+            cooldown2 = requestAnimationFrame(cooldownani2)
+            }
+
+            cooldownani()
+            
+            undo.addEventListener('click',function(){
+            cooldownani2()
+            })
+        const obj_i = document.getElementById('object_item')
+        const obj_r = document.getElementById('object_handle_r')
+        const obj_l = document.getElementById('object_handle_l')
+        const obj_t = document.getElementById('object_handle_t')
+        const obj_b = document.getElementById('object_handle_b')
+        const obj_rt = document.getElementById('object_handle_rt')
+        const obj_rb = document.getElementById('object_handle_rb')
+        const obj_lt = document.getElementById('object_handle_lt')
+        const obj_lb = document.getElementById('object_handle_lb')
+        const obj_m = document.getElementById('object_handle_move')
+
+        let mouseStatus = 0
+
+        let mouseX = 0
+        let mouseY = 0
+        let mouseXoff = 0
+        let mouseYoff = 0
+
+        let obj_position_x = (window.innerWidth/2)-50
+        let obj_position_y = (window.innerHeight/2)-50
+
+        obj_i.style.left = `${obj_position_x}px`
+        obj_i.style.top = `${obj_position_y}px`
+
+        obj_r.addEventListener('mousedown',function(e){
+            // 우
+            mouseStatus=1
+            mouseX = e.pageX
+        })
+        obj_l.addEventListener('mousedown',function(e){
+            // 좌
+            mouseStatus=2
+            mouseX = e.pageX
+        })
+        obj_t.addEventListener('mousedown',function(e){
+            // 상
+            mouseStatus=3
+            mouseY = e.pageY
+        })
+        obj_b.addEventListener('mousedown',function(e){
+            // 하
+            mouseStatus=4
+            mouseY = e.pageY
+        })
+        obj_rt.addEventListener('mousedown',function(e){
+            // 우상
+            mouseStatus=5
+            mouseY = e.pageY
+            mouseX = e.pageX
+        })
+        obj_rb.addEventListener('mousedown',function(e){
+            // 우하
+            mouseStatus=6
+            mouseY = e.pageY
+            mouseX = e.pageX
+        })
+        obj_lt.addEventListener('mousedown',function(e){
+            // 좌상
+            mouseStatus=7
+            mouseY = e.pageY
+            mouseX = e.pageX
+        })
+        obj_lb.addEventListener('mousedown',function(e){
+            // 좌하
+            mouseStatus=8
+            mouseY = e.pageY
+            mouseX = e.pageX
+        })
+
+        obj_m.addEventListener('mousedown',function(e){
+            // 이동
+            mouseStatus=9
+            mouseY = e.pageY
+            mouseX = e.pageX
+        })
+
+        window.addEventListener('mousemove',function(e){
+            if(mouseStatus>0){
+                mouseXoff = e.pageX-mouseX
+                mouseYoff = e.pageY-mouseY
+
+            }
+        })
+        
+        window.addEventListener('mouseup',function(){
+            // 위치값 저장
+            if(mouseStatus==2){
+                obj_position_x = obj_position_x+mouseXoff
+            }
+            if(mouseStatus==3){
+                obj_position_y = obj_position_y+mouseYoff
+            }
+            if(mouseStatus==5){
+                obj_position_y = obj_position_y+mouseYoff
+            }
+            if(mouseStatus==7){
+                obj_position_y = obj_position_y+mouseYoff
+                obj_position_x = obj_position_x+mouseXoff
+            }
+            if(mouseStatus==8){
+                obj_position_x = obj_position_x+mouseXoff
+            }
+            if(mouseStatus==9){
+                obj_position_y = obj_position_y+mouseYoff
+                obj_position_x = obj_position_x+mouseXoff
+            }
+            
+            // 상태 초기화
+            mouseStatus=0
+            mouseX = 0
+            mouseY = 0
+            mouseXoff = 0
+            mouseYoff = 0
+            object_w = obj_i.offsetWidth
+            object_h = obj_i.offsetHeight
+        })
+
+        let object_w = obj_i.offsetWidth
+        let object_h = obj_i.offsetHeight
+
+        let always
+
+        function alwaysrun(){
+            if(mouseStatus==0){
+
+            }else{
+
+                if(mouseStatus==1){
+                    // 우
+                    obj_i.style.width=`${object_w+mouseXoff}px`
+
+                    obj_t.style.width=`${object_w+mouseXoff-30}px`
+                    obj_b.style.width=`${object_w+mouseXoff-30}px`
+                }
+                
+                if(mouseStatus==2){
+                    // 좌
+                    obj_i.style.width=`${object_w-mouseXoff}px`
+
+                    obj_t.style.width=`${object_w-mouseXoff-30}px`
+                    obj_b.style.width=`${object_w-mouseXoff-30}px`
+
+                    obj_i.style.left=`${obj_position_x+mouseXoff}px`
+                }
+
+                if(mouseStatus==3){
+                    // 상
+                    obj_i.style.height=`${object_h-mouseYoff}px`
+
+                    obj_r.style.height=`${object_h-mouseYoff-30}px`
+                    obj_l.style.height=`${object_h-mouseYoff-30}px`
+
+                    obj_i.style.top=`${obj_position_y+mouseYoff}px`
+                }
+
+                if(mouseStatus==4){
+                    // 하
+                    obj_i.style.height=`${object_h+mouseYoff}px`
+
+                    obj_r.style.height=`${object_h+mouseYoff-30}px`
+                    obj_l.style.height=`${object_h+mouseYoff-30}px`
+                }
+
+                if(mouseStatus==5){
+                    // 우상
+                    obj_i.style.width=`${object_w+mouseXoff}px`
+                    obj_i.style.height=`${object_h-mouseYoff}px`
+
+                    obj_t.style.width=`${object_w+mouseXoff-30}px`
+                    obj_b.style.width=`${object_w+mouseXoff-30}px`
+
+                    obj_r.style.height=`${object_h-mouseYoff-30}px`
+                    obj_l.style.height=`${object_h-mouseYoff-30}px`
+
+                    obj_i.style.top=`${obj_position_y+mouseYoff}px`
+                }
+
+                if(mouseStatus==6){
+                    // 우하
+                    obj_i.style.width=`${object_w+mouseXoff}px`
+                    obj_i.style.height=`${object_h+mouseYoff}px`
+
+                    obj_t.style.width=`${object_w+mouseXoff-30}px`
+                    obj_b.style.width=`${object_w+mouseXoff-30}px`
+
+                    obj_r.style.height=`${object_h+mouseYoff-30}px`
+                    obj_l.style.height=`${object_h+mouseYoff-30}px`
+                }
+
+                if(mouseStatus==7){
+                    // 좌상
+                    obj_i.style.width=`${object_w-mouseXoff}px`
+                    obj_i.style.height=`${object_h-mouseYoff}px`
+
+                    obj_t.style.width=`${object_w-mouseXoff-30}px`
+                    obj_b.style.width=`${object_w-mouseXoff-30}px`
+
+                    obj_r.style.height=`${object_h-mouseYoff-30}px`
+                    obj_l.style.height=`${object_h-mouseYoff-30}px`
+                    
+                    obj_i.style.left=`${obj_position_x+mouseXoff}px`
+                    obj_i.style.top=`${obj_position_y+mouseYoff}px`
+                }
+
+                if(mouseStatus==8){
+                    // 좌하
+                    obj_i.style.width=`${object_w-mouseXoff}px`
+                    obj_i.style.height=`${object_h+mouseYoff}px`
+
+                    obj_t.style.width=`${object_w-mouseXoff-30}px`
+                    obj_b.style.width=`${object_w-mouseXoff-30}px`
+
+                    obj_r.style.height=`${object_h+mouseYoff-30}px`
+                    obj_l.style.height=`${object_h+mouseYoff-30}px`
+
+                    obj_i.style.left=`${obj_position_x+mouseXoff}px`
+                }
+
+                if(mouseStatus==9){
+                    // 이동
+
+                    obj_i.style.left=`${obj_position_x+mouseXoff}px`
+                    obj_i.style.top=`${obj_position_y+mouseYoff}px`
+                }
+            }
+            obj_m.style.width=`${obj_i.offsetWidth-30}px`
+            obj_m.style.height=`${obj_i.offsetHeight-30}px`
+            always = requestAnimationFrame(alwaysrun)
+        }
+
+        alwaysrun()
+
+
+    </script>
+</body>
+</html>

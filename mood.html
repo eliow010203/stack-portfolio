@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+  <style>
+    *{
+      padding: 0px;
+      margin: 0px;
+    }
+    .moodtitle{
+      font-weight: bold;
+      font-size: 18vw;
+      width: 90%;
+      height: 90vh;
+      position: absolute;
+      top: 0px;
+      color: #fff;
+      z-index: 30;
+      text-align: center;
+      line-height: 90vh;
+      margin: 5vh 5%;
+      border: 10px solid #fff;
+      box-sizing: border-box;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    #frame{
+      position: relative;
+      overflow: hidden;
+      height: 100vh;
+      width: 100%;
+    }
+
+    #mood01{
+      position: absolute;
+      width: 550px;
+      height: 550px;
+      filter: blur(350px);
+      background-color: rgb(72, 255, 255);
+      border-radius: 50%;
+      transition: 5s;
+      transform: translate(-50%, -50%);
+    }
+    #mood02{
+      position: absolute;
+      width: 650px;
+      height: 650px;
+      filter: blur(400px);
+      background-color: rgb(255, 60, 255);
+      border-radius: 50%;
+      transition: 5s;
+      transform: translate(-50%, -50%);
+    }
+    #mood03{
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      filter: blur(400px);
+      background-color: rgb(79, 255, 73);
+      border-radius: 50%;
+      transition: 5s;
+      transform: translate(-50%, -50%);
+    }
+    #loader{
+      width: 100%;
+      height: 100vh;
+      background-color: #222;
+      z-index: 100;
+      position: absolute;
+      pointer-events: none;
+      transition: .6s;
+    }
+
+    #undo{
+      display: block;
+      cursor: pointer;
+      position: fixed;
+      width: 50px;
+      height: 50px;
+      top: 20px;
+      left: 20px;
+      color: #222;
+      z-index: 50;
+      background-color: #ffffff00;
+    }
+    #undo span{
+      font-size: 50px;
+      user-select: none;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="loader" style="opacity: 1;"></div>
+  <div id="undo"><span class="material-icons">arrow_back</span></div>
+
+  <!-- <h1 class="moodtitle">MOOD</h1> -->
+  <div id="frame"><div id="mood01"></div><div id="mood02"></div><div id="mood03"></div></div>
+
+  <script defer>
+    const loader_div = document.getElementById('loader')
+    const undo = document.getElementById('undo')
+
+    let cooldown
+    let cooldown2
+    let cooldownnum = 30
+    let cooldownnum2 = 120
+
+    function cooldownani(){
+      if(cooldownnum>0){
+        cooldownnum--
+      }else{
+        loader_div.style.opacity=`0`
+      }
+      cooldown = requestAnimationFrame(cooldownani)
+    }
+    function cooldownani2(){
+      loader_div.style.opacity=`1`
+      if(cooldownnum2>0){
+        cooldownnum2--
+      }else{
+        window.location.href = './index.html'
+      }
+      cooldown2 = requestAnimationFrame(cooldownani2)
+    }
+
+    cooldownani()
+    
+    undo.addEventListener('click',function(){
+      cooldownani2()
+    })
+
+
+    const frame = document.getElementById('frame')
+    const mood01 = document.getElementById('mood01')
+    const mood02 = document.getElementById('mood02')
+    const mood03 = document.getElementById('mood03')
+
+    let rannum = Math.floor(Math.random()*30)+1
+
+    let animate
+    let cooldowni = 300
+
+    for(i=0; i<frame.childElementCount; i++){
+      rannum = Math.floor(Math.random()*window.innerHeight)+1
+      frame.childNodes[i].style.top=`${rannum}px`
+      rannum = Math.floor(Math.random()*window.innerWidth)+1
+      frame.childNodes[i].style.left=`${rannum}px`
+    }
+    
+    frame.addEventListener('click',function(){
+      
+      for(i=0; i<frame.childElementCount; i++){
+        rannum = Math.floor(Math.random()*window.innerHeight)+1
+        frame.childNodes[i].style.top=`${rannum}px`
+        rannum = Math.floor(Math.random()*window.innerWidth)+1
+        frame.childNodes[i].style.left=`${rannum}px`
+        frame.childNodes[i].style.transition=`2s`
+        cooldowni=0
+      }
+
+    })
+
+    function divmove() {
+      cooldowni++
+      if(cooldowni>=300){
+        for(i=0; i<frame.childElementCount; i++){
+          frame.childNodes[i].style.transition=`5s`
+          rannum = Math.floor(Math.random()*window.innerHeight)+1
+          frame.childNodes[i].style.top=`${rannum}px`
+          rannum = Math.floor(Math.random()*window.innerWidth)+1
+          frame.childNodes[i].style.left=`${rannum}px`
+        }
+        cooldowni=0
+      }
+
+      animate = requestAnimationFrame(divmove)
+      
+    }
+    divmove()
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    <style>
+        *{
+            padding: 0px;
+            margin: 0px;
+        }
+
+        html{
+            overflow: hidden;
+        }
+
+        #loading{
+            width: 100%;
+            height: 100vh;
+            background-color: #222;
+            position: absolute;
+            transition: .3s;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        #loading_logo{
+            position: relative;
+            width: 300px;
+            height: 150px;
+            margin: 0px auto;
+            overflow: hidden;
+        }
+
+        .page-frame{
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #logo{
+            position: absolute;
+            bottom: 90px;
+            width: 300px;
+            height: 150px;
+        }
+
+        .logo_title{
+            color: #eee;
+            position: absolute;
+            bottom: 30px;
+            text-align: center;
+            width: 100%;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .logo_subtitle{
+            color: #eee;
+            position: absolute;
+            bottom: 5px;
+            text-align: center;
+            width: 100%;
+            font-size: 16px;
+            /* font-weight: bold; */
+        }
+
+        .cls-1{
+            fill: #eee;
+        }
+
+
+        #fade-top{
+            position: absolute;
+            width: 100%;
+            height: 70px;
+            background-color: #222;
+            top: 0px;
+            z-index: 30;
+            transition: 2s;
+        }
+        #fade-bottom{
+            position: absolute;
+            width: 100%;
+            height: 70px;
+            background-color: #222;
+            bottom: 0px;
+            z-index: 30;
+            transition: 2s;
+        }
+        #left_btn{
+            position: absolute;
+            width: 150px;
+            height: 100%;
+            background-color: #fff;
+            top: 0px;
+            left: -10px;
+            transition: .3s;
+            cursor: pointer;
+        }
+        #right_btn{
+            position: absolute;
+            width: 150px;
+            height: 100%;
+            background-color: #fff;
+            top: 0px;
+            right: -10px;
+            transition: .3s;
+            cursor: pointer;
+        }
+
+        #left_btn:hover{
+            background-color: #ddd;
+            filter: blur(50px);
+        }
+        #right_btn:hover{
+            background-color: #ddd;
+            filter: blur(50px);
+        }
+
+        #slide{
+            top: 70px;
+            width: 700vw;
+            display: flex;
+            position: relative;
+            z-index: 5;
+            pointer-events: none;
+            list-style: none;
+            padding-block-start: 0px;
+            transition: .6s;
+        }
+        
+        #slide li{
+            pointer-events: none;
+            position: relative;
+            width: 100vw;
+        }
+        #slide li img{
+            pointer-events: all;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 40vh;
+            box-shadow: 0px 0px 20px #00000048;
+            /* width: 150px; */
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+        }
+
+        .art_title{
+            position: absolute;
+            font-size: 24px;
+            font-weight: bold;
+            top: 18%;
+            left: 50%;
+            width: 40vh;
+            /* text-indent: 10px; */
+            transform: translateX(-50%);
+        }
+        .able_device{
+            user-select: none;
+            position: absolute;
+            font-size: 24px;
+            top: 77%;
+            left: 50%;
+            width: 40vh;
+            color: #aaa;
+            transform: translateX(-50%);
+            
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div id="loading_logo">
+            <svg id="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 75">
+                <polygon class="cls-1" points="45 15 45 30 30 30 15 30 15 15 15 0 0 0 0 15 0 30 0 45 0 60 0 75 15 75 15 60 15 45 30 45 45 45 45 60 45 75 60 75 60 60 60 45 60 30 60 15 60 0 45 0 45 15"/>
+                <polygon class="cls-1" points="75 0 75 15 75 30 90 30 105 30 105 15 105 0 90 0 75 0"/>
+                <polygon class="cls-1" points="75 45 75 60 75 75 90 75 105 75 105 60 105 45 90 45 75 45"/>
+                <polygon class="cls-1" points="135 45 120 45 120 60 120 75 135 75 150 75 150 60 150 45 135 45"/>
+            </svg>
+            <p class="logo_title">Han Dan Han Dan</p>
+            <p class="logo_subtitle">Web Art Gallery</p>
+        </div>
+    </div>
+    <div class="page-frame">
+        <div id="fade-top"></div>
+        <ul id="slide">
+
+            <li>
+                <img src="./string.png" alt="" id="art01">
+                <p class="art_title">The String</p>
+                <p class="able_device">
+                    <span class="material-icons">computer</span>
+                    <span class="material-icons">smartphone</span>
+                </p>
+            </li>
+            <li>
+                <img src="./orange.png" alt="" id="art02">
+                <p class="art_title">The orange</p>
+                <p class="able_device">
+                    <span class="material-icons">computer</span>
+                </p>
+            </li>
+            <li>
+                <img src="./light.png" alt="" id="art03">
+                <p class="art_title">The Light</p>
+                <p class="able_device">
+                    <span class="material-icons">computer</span>
+                </p>
+            </li>
+            <li>
+                <img src="./mood.png" alt="" id="art04">
+                <p class="art_title">The Mood</p>
+                <p class="able_device">
+                    <span class="material-icons">computer</span>
+                    <span class="material-icons">smartphone</span>
+                </p>
+            </li>
+            <li>
+                <img src="./raindrop.png" alt="" id="art05">
+                <p class="art_title">The Raindrop</p>
+                <p class="able_device">
+                    <span class="material-icons">computer</span>
+                    <span class="material-icons">smartphone</span>
+                </p>
+            </li>
+            <li>
+                <img src="./object.png" alt="" id="art06">
+                <p class="art_title">The Object</p>
+                <p class="able_device">
+                    <span class="material-icons">computer</span>
+                </p>
+            </li>
+            <li>
+                <img src="./more.svg" alt="" id="art07">
+                <p class="art_title"></p>
+                <p class="able_device">
+                    준비중
+                </p>
+            </li>
+
+        </ul>
+        <div id="left_btn"></div>
+        <div id="right_btn"></div>
+        <div id="fade-bottom"></div>
+    </div>
+
+    <script>
+        const loading = document.getElementById('loading')
+        const loading_wrap = document.getElementById('loading_logo')
+        const logo = document.getElementById('logo')
+
+
+        const fade_t = document.getElementById('fade-top')
+        const fade_b = document.getElementById('fade-bottom')
+        
+
+        const art01 = document.getElementById('art01')
+        const art02 = document.getElementById('art02')
+        const art03 = document.getElementById('art03')
+        const art04 = document.getElementById('art04')
+        const art05 = document.getElementById('art05')
+        const art06 = document.getElementById('art06')
+
+
+        const slide = document.getElementById('slide')
+        const lbtn = document.getElementById('left_btn')
+        const rbtn = document.getElementById('right_btn')
+
+        slide.style.height=`${window.innerHeight-140}px`
+
+        let status = 0
+        art01.addEventListener('click',function(){
+            pagemove()
+            status = 1
+            fade_t.style.height=`${window.innerHeight/2+10}px`
+            fade_b.style.height=`${window.innerHeight/2+10}px`
+        })
+        art02.addEventListener('click',function(){
+            pagemove()
+            status = 2
+            fade_t.style.height=`${window.innerHeight/2+10}px`
+            fade_b.style.height=`${window.innerHeight/2+10}px`
+        })
+        art03.addEventListener('click',function(){
+            pagemove()
+            status = 3
+            fade_t.style.height=`${window.innerHeight/2+10}px`
+            fade_b.style.height=`${window.innerHeight/2+10}px`
+        })
+        art04.addEventListener('click',function(){
+            pagemove()
+            status = 4
+            fade_t.style.height=`${window.innerHeight/2+10}px`
+            fade_b.style.height=`${window.innerHeight/2+10}px`
+        })
+        art05.addEventListener('click',function(){
+            pagemove()
+            status = 5
+            fade_t.style.height=`${window.innerHeight/2+10}px`
+            fade_b.style.height=`${window.innerHeight/2+10}px`
+        })
+        art06.addEventListener('click',function(){
+            pagemove()
+            status = 6
+            fade_t.style.height=`${window.innerHeight/2+10}px`
+            fade_b.style.height=`${window.innerHeight/2+10}px`
+        })
+
+
+        let loading_origin = 300
+        let loading_t = 90
+
+
+        loading_wrap.style.top=`${window.innerHeight/5+(loading_origin-loading_t)}px`
+        loading_wrap.style.height=`${loading_t}px`
+
+        let start_animate
+        let start_cool = 300
+        let loading_animate = (240/start_cool)*1.1
+
+        // 시작로딩 스크립트
+
+        function start() {
+            if(start_cool>0){
+                start_cool--
+                loading_t = loading_t+loading_animate
+            }else{
+                loading.style.opacity=`0`
+            }
+
+
+            
+            loading_wrap.style.top=`${window.innerHeight/5+(loading_origin-loading_t)}px`
+            loading_wrap.style.height=`${loading_t}px`
+
+            
+
+            start_animate = requestAnimationFrame(start)
+        }
+
+        start()
+
+        let pagemoving
+        let pagemove_t = 0
+
+
+        // 페이지 이동 스크립트
+
+        function pagemove() {
+            if(pagemove_t<180){
+                pagemove_t++
+            }else{
+                if(status==1){
+                    window.location.href = './string.html'
+                }
+                if(status==2){
+                    window.location.href = './orange.html'
+                }
+                if(status==3){
+                    window.location.href = './light.html'
+                }
+                if(status==4){
+                    window.location.href = './mood.html'
+                }
+                if(status==5){
+                    window.location.href = './raindrop.html'
+                }
+                if(status==6){
+                    window.location.href = './object.html'
+                }
+            }
+
+
+
+            pagemoving = requestAnimationFrame(pagemove)
+        }
+
+        let slidenum = 0
+
+        slide.style.left=`${100*slidenum}vw`
+
+        rbtn.addEventListener('click',function(){
+            if(slidenum<6){
+                slidenum++
+            }else{
+                slidenum = 0
+            }
+            slide.style.left=`-${100*slidenum}vw`
+        })
+
+        lbtn.addEventListener('click',function(){
+            if(slidenum>0){
+                slidenum--
+            }else{
+                slidenum = 6
+            }
+            slide.style.left=`-${100*slidenum}vw`
+        })
+
+    </script>
+</body>
+</html>

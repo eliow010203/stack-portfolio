@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+  <style>
+    *{
+      padding: 0px;
+      margin: 0px;
+    }
+
+    html{
+      overflow: hidden;
+      background-color: rgb(0, 100, 214);
+    }
+
+    #canvas{
+      width: 100%;
+      height: 100vh;
+    }
+
+    #loader{
+      width: 100%;
+      height: 100vh;
+      background-color: #222;
+      z-index: 100;
+      position: absolute;
+      pointer-events: none;
+      transition: .6s;
+    }
+
+    #undo{
+      display: block;
+      cursor: pointer;
+      position: fixed;
+      width: 50px;
+      height: 50px;
+      top: 20px;
+      left: 20px;
+      color: #fff;
+      z-index: 50;
+      background-color: #ffffff00;
+    }
+    #undo span{
+      font-size: 50px;
+      user-select: none;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="loader" style="opacity: 1;"></div>
+  <div id="undo"><span class="material-icons">arrow_back</span></div>
+
+  <canvas id="canvas"></canvas>
+
+  <script>
+    const loader_div = document.getElementById('loader')
+    const undo = document.getElementById('undo')
+
+    let cooldown
+    let cooldown2
+    let cooldownnum = 30
+    let cooldownnum2 = 120
+
+    function cooldownani(){
+      if(cooldownnum>0){
+        cooldownnum--
+      }else{
+        loader_div.style.opacity=`0`
+      }
+      cooldown = requestAnimationFrame(cooldownani)
+    }
+    function cooldownani2(){
+      loader_div.style.opacity=`1`
+      if(cooldownnum2>0){
+        cooldownnum2--
+      }else{
+        window.location.href = './index.html'
+      }
+      cooldown2 = requestAnimationFrame(cooldownani2)
+    }
+
+    cooldownani()
+    
+    undo.addEventListener('click',function(){
+      cooldownani2()
+    })
+
+
+    // 캔버스 불러오기
+    const canvas = document.getElementById('canvas')
+    canvas.width=window.innerWidth
+    canvas.height=window.innerHeight
+    const ctx = canvas.getContext('2d')
+    
+    window.addEventListener('resize',function(){
+      canvas.width=window.innerWidth
+      canvas.height=window.innerHeight
+    })
+
+    // 어래이 생성
+
+    // 반지름 어레이
+    let drop_r = []
+
+    // x좌표 어레이
+    let drop_x = []
+
+    // y좌표 어레이
+    let drop_y = []
+
+    // 투명도 어레이
+    let drop_o = []
+
+
+    window.addEventListener('click',function(e){
+      drop_x.unshift(e.pageX)
+      drop_y.unshift(e.pageY)
+      drop_r.unshift(1)
+      drop_o.unshift(255)
+    })
+    let animate
+
+    let num = 255
+
+
+    
+    function anime() {
+
+
+      drop_o.forEach((e)=>{
+        if(e>0){
+          drop_o[drop_o.indexOf(e)] = e-2
+        }
+      })
+      
+
+
+      
+      if(drop_r[drop_r.length-1]>=255){
+        drop_r = drop_r.slice(0, -1)
+        drop_x = drop_x.slice(0, -1)
+        drop_y = drop_y.slice(0, -1)
+        drop_o = drop_o.slice(0, -1)
+      }
+
+      drop_r.forEach((item)=>{
+        drop_r[drop_r.indexOf(item)] = item+2
+      })
+
+
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
+      drop_r.forEach((item)=>{
+
+
+        // 그리기 영역
+
+        // 16진수 변환
+        if(drop_o[drop_r.indexOf(item)]<16){
+          ctx.strokeStyle=`#93c5ff0${drop_o[drop_r.indexOf(item)].toString(16)}`
+
+        }else{
+          ctx.strokeStyle=`#93c5ff${drop_o[drop_r.indexOf(item)].toString(16)}`
+
+        }
+
+        ctx.lineWidth=`6`
+        ctx.beginPath()
+        ctx.arc(drop_x[drop_r.indexOf(item)], drop_y[drop_r.indexOf(item)], drop_r[drop_r.indexOf(item)]/1, 0, Math.PI*2)
+        ctx.stroke()
+        ctx.beginPath()
+        ctx.arc(drop_x[drop_r.indexOf(item)], drop_y[drop_r.indexOf(item)], drop_r[drop_r.indexOf(item)]/1.321, 0, Math.PI*2)
+        ctx.stroke()
+        ctx.beginPath()
+        ctx.arc(drop_x[drop_r.indexOf(item)], drop_y[drop_r.indexOf(item)], drop_r[drop_r.indexOf(item)]/2, 0, Math.PI*2)
+        ctx.stroke()
+      })
+
+
+      animate = requestAnimationFrame(anime)
+    }
+
+
+    anime()
+
+
+  </script>
+</body>
+</html>

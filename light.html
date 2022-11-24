@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    <style>
+        *{
+            padding: 0px;
+            margin: 0px;
+        }
+
+        html{
+            cursor: none;
+            background-color: #000;
+        }
+
+        #canvas{
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            filter: blur(9px);
+            z-index: 10;
+        }
+        
+        #canvas2{
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100vw;
+            height: 100vh;
+            filter: blur(1px);
+            z-index: 10;
+        }
+
+        #frame{
+            overflow: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url(./img/pattern.webp);
+        }
+
+        #shadow{
+            position: relative;
+            width: 500vw;
+            height: 500vh;
+            background: radial-gradient(circle, #008cff 0%, rgba(0,0,0,.99) 4%);
+            transform: translate(-50%, -50%);
+        }
+        #loader{
+            width: 100%;
+            height: 100vh;
+            background-color: #222;
+            z-index: 100;
+            position: absolute;
+            pointer-events: none;
+            transition: .6s;
+        }
+
+        #undo{
+            display: block;
+            cursor: pointer;
+            position: fixed;
+            width: 50px;
+            height: 50px;
+            top: 20px;
+            left: 20px;
+            color: #fff;
+            z-index: 50;
+            background-color: #ffffff00;
+        }
+        #undo span{
+            font-size: 50px;
+            user-select: none;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader" style="opacity: 1;"></div>
+    <div id="undo"><span class="material-icons">arrow_back</span></div>
+
+
+    <canvas id="canvas">이 브라우저는 캔버스를 지원하지 않습니다. 다른브라우저를 사용하거나 브라우저를 업데이트 해주십시오</canvas>
+    <canvas id="canvas2">이 브라우저는 캔버스를 지원하지 않습니다. 다른브라우저를 사용하거나 브라우저를 업데이트 해주십시오</canvas>
+
+    <!-- <div id="frame">
+        <div id="shadow"></div>
+    </div> -->
+
+    <script>
+        const loader_div = document.getElementById('loader')
+        const undo = document.getElementById('undo')
+
+        let cooldown
+        let cooldown2
+        let cooldownnum = 30
+        let cooldownnum2 = 120
+
+        function cooldownani(){
+        if(cooldownnum>0){
+            cooldownnum--
+        }else{
+            loader_div.style.opacity=`0`
+        }
+        cooldown = requestAnimationFrame(cooldownani)
+        }
+        function cooldownani2(){
+        loader_div.style.opacity=`1`
+        if(cooldownnum2>0){
+            cooldownnum2--
+        }else{
+            window.location.href = './index.html'
+        }
+        cooldown2 = requestAnimationFrame(cooldownani2)
+        }
+
+        cooldownani()
+        
+        undo.addEventListener('click',function(){
+        cooldownani2()
+        })
+        // const shadow = document.getElementById("shadow");
+
+
+        const canvas = document.getElementById("canvas");
+        canvas.width= window.innerWidth
+        canvas.height= window.innerHeight
+        const ctx = canvas.getContext("2d");
+
+        const canvas2 = document.getElementById("canvas2");
+        canvas2.width= window.innerWidth
+        canvas2.height= window.innerHeight
+        const ctx2 = canvas2.getContext("2d");
+
+        const linecolor01 = '#008cff'
+        const lightcolor01 = '#ffffff'
+
+
+        let mx
+        let my
+
+        let mhx = new Array(1)
+        let mhy = new Array(1)
+
+        mhx.fill(0)
+        mhy.fill(0)
+
+        window.addEventListener('resize',function(){
+            canvas.width= window.innerWidth
+            canvas.height= window.innerHeight
+            canvas2.width= window.innerWidth
+            canvas2.height= window.innerHeight
+        })
+
+        window.addEventListener('mousemove',function(e){
+            mx = e.clientX
+            my = e.clientY
+        })
+
+
+
+
+        let animate
+        mousePos()
+        function mousePos() {
+
+            mhx.push(mx)
+            mhy.push(my)
+
+            // shadow.style.top=`${my}px`
+            // shadow.style.left=`${mx}px`
+
+            ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
+            ctx.beginPath();
+            ctx.arc(mhx.at(-1), mhy.at(-1), 7.5, 0, 2 * Math.PI);
+            ctx.fillStyle = linecolor01;
+            ctx.fill();
+
+
+
+            ctx.beginPath();
+            ctx.moveTo(mhx.at(-1), mhy.at(-1))
+            ctx.lineTo(mhx.at(-2), mhy.at(-2))
+            ctx.lineTo(mhx.at(-3), mhy.at(-3))
+            ctx.lineTo(mhx.at(-4), mhy.at(-4))
+            ctx.lineTo(mhx.at(-5), mhy.at(-5))
+            ctx.lineTo(mhx.at(-6), mhy.at(-6))
+            ctx.lineTo(mhx.at(-7), mhy.at(-7))
+            ctx.lineTo(mhx.at(-8), mhy.at(-8))
+            ctx.lineWidth = 30;
+            ctx.strokeStyle = linecolor01;
+            ctx.stroke();
+
+            ctx2.clearRect(0, 0, window.innerWidth, window.innerHeight)
+            ctx2.beginPath();
+            ctx2.arc(mhx.at(-1), mhy.at(-1), 5, 0, 2 * Math.PI);
+            ctx2.fillStyle = lightcolor01;
+            ctx2.fill();
+
+            ctx2.beginPath();
+            ctx2.moveTo(mhx.at(-1), mhy.at(-1))
+            ctx2.lineTo(mhx.at(-2), mhy.at(-2))
+            ctx2.lineTo(mhx.at(-3), mhy.at(-3))
+            ctx2.lineTo(mhx.at(-4), mhy.at(-4))
+            ctx2.lineTo(mhx.at(-5), mhy.at(-5))
+            ctx2.lineTo(mhx.at(-6), mhy.at(-6))
+            ctx2.lineTo(mhx.at(-7), mhy.at(-7))
+            ctx2.lineTo(mhx.at(-8), mhy.at(-8))
+            ctx2.lineWidth = 7;
+            ctx2.strokeStyle = lightcolor01;
+            ctx2.stroke();
+
+            animate=requestAnimationFrame(mousePos)
+            
+        }
+
+
+    </script>
+</body>
+</html>
