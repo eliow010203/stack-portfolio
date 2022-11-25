@@ -65,6 +65,7 @@
     let cooldown2
     let cooldownnum = 30
     let cooldownnum2 = 120
+    let timeset = 0
 
     function cooldownani(){
       if(cooldownnum>0){
@@ -79,7 +80,10 @@
       if(cooldownnum2>0){
         cooldownnum2--
       }else{
-        window.location.href = './index.html'
+        if(timeset==0){
+                window.location.href = './index.html'
+                timeset=1
+            }
       }
       cooldown2 = requestAnimationFrame(cooldownani2)
     }
