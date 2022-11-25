@@ -156,7 +156,18 @@
             position: absolute;
             font-size: 24px;
             font-weight: bold;
-            top: 18%;
+            top: 14%;
+            left: 50%;
+            width: 40vh;
+            /* text-indent: 10px; */
+            transform: translateX(-50%);
+        }
+        .art_description{
+            position: absolute;
+            font-size: 16px;
+            color: #777;
+            font-weight: bold;
+            top: 19%;
             left: 50%;
             width: 40vh;
             /* text-indent: 10px; */
@@ -195,6 +206,9 @@
             <li>
                 <img src="./string.png" alt="" id="art01">
                 <p class="art_title">The String</p>
+                <p class="art_description">통통튀는 느낌의 선
+                    <br>클릭하면 선이 튀어오릅니다.
+                </p>
                 <p class="able_device">
                     <span class="material-icons">computer</span>
                     <span class="material-icons">smartphone</span>
@@ -203,6 +217,9 @@
             <li>
                 <img src="./orange.png" alt="" id="art02">
                 <p class="art_title">The orange</p>
+                <p class="art_description">늘어났다 줄어들었다. 들쭉날쭉한 오렌지
+                    <br>오브젝트의 크기를 조절 할 수 있습니다.
+                </p>
                 <p class="able_device">
                     <span class="material-icons">computer</span>
                 </p>
@@ -210,6 +227,9 @@
             <li>
                 <img src="./light.png" alt="" id="art03">
                 <p class="art_title">The Light</p>
+                <p class="art_description">나를 따라오는 불빛
+                    <br>빛이 마우스를 따라옵니다.
+                </p>
                 <p class="able_device">
                     <span class="material-icons">computer</span>
                 </p>
@@ -217,6 +237,9 @@
             <li>
                 <img src="./mood.png" alt="" id="art04">
                 <p class="art_title">The Mood</p>
+                <p class="art_description">아름다운 색의 조화
+                    <br>클릭하면 색이 바뀝니다.
+                </p>
                 <p class="able_device">
                     <span class="material-icons">computer</span>
                     <span class="material-icons">smartphone</span>
@@ -225,6 +248,9 @@
             <li>
                 <img src="./raindrop.png" alt="" id="art05">
                 <p class="art_title">The Raindrop</p>
+                <p class="art_description">툭툭 떨어지는 빗방울
+                    <br>클릭하면 빗방울이 떨어집니다.
+                </p>
                 <p class="able_device">
                     <span class="material-icons">computer</span>
                     <span class="material-icons">smartphone</span>
@@ -233,6 +259,9 @@
             <li>
                 <img src="./object.png" alt="" id="art06">
                 <p class="art_title">The Object</p>
+                <p class="art_description">공간감을 주는 요소
+                    <br>드레그하면 다른 각도에서 볼 수 있습니다.
+                </p>
                 <p class="able_device">
                     <span class="material-icons">computer</span>
                 </p>
@@ -331,7 +360,9 @@
             if(start_cool>0){
                 start_cool--
                 loading_t = loading_t+loading_animate
+                loading.style.pointerEvents=`all`
             }else{
+                loading.style.pointerEvents=`none`
                 loading.style.opacity=`0`
             }
 
